@@ -8,6 +8,7 @@ export const revalidate=0
 
 const NavBar=async()=>{
     const categories= await getCategories()
+    
     return (
         <>
             <div className="border-b">

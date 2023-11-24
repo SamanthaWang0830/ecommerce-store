@@ -20,21 +20,47 @@ const useCart = create(
         // 若添加的是同一个物品的同一个尺码，只需在items里找到那个item，把num+=1
         // 若不是，则创建一个新的item在items里
         addItem:(data: CartItem)=>{
-            
             set((state)=>{
+                
                 const existingItem= state.items.find((item)=> item.product.id == data.product.id && item.size === data.size)
 
                 if(existingItem){
+                    // check if the number of each cartItem above the corresponding stock
+                    if(existingItem.size.toLowerCase()=='s'){
+                        if(existingItem.num==  existingItem.product.stockOfSmallSize){
+                            toast.error('We do not have that many items in stock')
+                            return state
+                        }else{
+                            toast.success('Item added to cart')
+                        }
+                    }else if(data.size.toLowerCase()=='m'){
+                        if(existingItem.num== data.product.stockOfMediumSize){
+                            toast.error('We do not have that many items in stock')
+                            return state
+                        }else{
+                            toast.success('Item added to cart')
+                        }
+                    }else{
+                        if(existingItem.num== existingItem.product.stockOfLargeSize){
+                            toast.error('We do not have that many items in stock')
+                            return state
+                        }else{
+                            toast.success('Item added to cart')
+                        }
+                    }
                     return{
                         items: state.items.map((item)=> item.product.id == data.product.id && item.size === data.size? {...item, num:item.num+1} : item)
                     }
-                }
-
-                return {
-                    items:[...state.items, data]
+                    
+                }else{
+                    toast.success('Item added to cart')
+                    return {
+                        items:[...state.items, data]
+                    }
+                    
                 }
             })
-            toast.success('Item added to cart')
+            
         },
         
         // 此id应该为这个cartItem所对应的product的id
@@ -69,6 +95,31 @@ const useCart = create(
             set((state)=>{
                 const existingItem= state.items.find((item)=> item.product.id == data.product.id && item.size === data.size)
 
+
+                // check if the number of each cartItem above the corresponding stock
+                if(data.size.toLowerCase()=='s'){
+                    if(existingItem!.num==  existingItem!.product.stockOfSmallSize){
+                        toast.error('We do not have that many items in stock')
+                        return state
+                    }else{
+                        toast.success('Item added to cart')
+                    }
+                }else if(data.size.toLowerCase()=='m'){
+                    if(existingItem!.num== data.product.stockOfMediumSize){
+                        toast.error('We do not have that many items in stock')
+                        return state
+                    }else{
+                        toast.success('Item added to cart')
+                    }
+                }else{
+                    if(existingItem!.num== existingItem!.product.stockOfLargeSize){
+                        toast.error('We do not have that many items in stock')
+                        return state
+                    }else{
+                        toast.success('Item added to cart')
+                    }
+                }
+
                 let updatedItems= state.items.map((item)=>{
                     if (item== existingItem){
                         return {...item, num: item.num+1}
@@ -80,7 +131,6 @@ const useCart = create(
                     items:updatedItems
                 }
             })
-            toast.success('Item added to the cart')
         },
 
         // 把同一个物品,同一个尺码的全部删除

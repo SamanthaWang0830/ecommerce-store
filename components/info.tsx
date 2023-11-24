@@ -15,8 +15,20 @@ interface InfoProps{
 
 const Info: React.FC<InfoProps>=({data})=>{
     const [selectedSize, setSelectedSize] = useState('');
+    const [open, setOpen]= useState(false);
+
+    const [stock, setStock]=useState<number>()
+
     const handleSizeChange = (size:string) => {
         setSelectedSize(size);
+        setOpen(true)
+        if(size=='s'){
+            setStock(data.stockOfSmallSize)
+        }else if(size=='m'){
+            setStock(data.stockOfMediumSize)
+        }else{
+            setStock(data.stockOfLargeSize)
+        }
     };
 
 
@@ -33,10 +45,6 @@ const Info: React.FC<InfoProps>=({data})=>{
         cart.addItem(cartItem)
     }
 
-    const removeAll=() => {
-        cart.removeAll()
-    }
-
 
     return(
         <div>
@@ -47,28 +55,30 @@ const Info: React.FC<InfoProps>=({data})=>{
                 </p>
             </div>
             <hr className="my-4" />
-            <div className="flex items-center gap-x-4">
+            <div className="flex items-center gap-x-4 mb-4">
                 <h3 className="font-semibold text-black">Size:</h3>
                 <div className="flex gap-4">
-                    <div key='s' className="flex items-center">
+                    <div key='s' className="flex flex-col items-center">
                             <Button
                                 className={cn(
                                     "rounded-md text-sm text-gray-800 p-2 bg-white border border-gray-300",
                                     selectedSize== 's' && 'bg-black text-white'
                                 )}
                                 onClick={()=>handleSizeChange('s')}
+                                disabled={!data.stockOfSmallSize}
                             >
                                 S
                             </Button>
-                            
                     </div>
                     <div key='m'  className="flex items-center">
                             <Button
                                 className={cn(
                                     "rounded-md text-sm text-gray-800 p-2 bg-white border border-gray-300",
                                     selectedSize=='m' && 'bg-black text-white'
+                                    
                                 )}
                                 onClick={()=>handleSizeChange('m')}
+                                disabled={!data.stockOfMediumSize}
                             >
                                 M
                             </Button>
@@ -81,14 +91,17 @@ const Info: React.FC<InfoProps>=({data})=>{
                                     selectedSize== 'l' && 'bg-black text-white'
                                 )}
                                 onClick={()=>handleSizeChange('l')}
+                                disabled={!data.stockOfLargeSize}
                             >
                                 L
                             </Button>
                             
                     </div>
-                    <button onClick={removeAll}>removeAll</button>
                 </div>
             </div>
+            {
+                open && <span className="ml-10 ">{stock} in stock</span> 
+            }
             <div className="mt-10 flex items-center gap-x-3">
                 <Button onClick={onAddToCart} className="flex items-center gap-x-2" disabled={selectedSize? false: true}>
                     Add To Cart
