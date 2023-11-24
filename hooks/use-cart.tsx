@@ -68,9 +68,10 @@ const useCart = create(
         // 若cartItem的数量为1，直接删除这个item
         minusOneItemWithSameSize:(data: CartItem) => {
             set((state)=>{
+                console.log(data)
                 const existingItem= state.items.find((item)=> item.product.id == data.product.id && item.size === data.size)
 
-                if(existingItem!.num==1){
+                if(existingItem && existingItem.num==1){
                     return {
                         items:state.items.filter((item)=> item !== existingItem)
                     }
@@ -139,7 +140,7 @@ const useCart = create(
                 const existingItem= state.items.find((item)=> item.product.id == data.product.id && item.size === data.size)
 
                 return {
-                    items:state.items.filter((item)=> item.product.id !== data.product.id)
+                    items:state.items.filter((item)=>item !== existingItem)
                 }
             })
             toast.success('Item removed from the cart')

@@ -56,7 +56,6 @@ const CartItem: React.FC<CartItemProps> =({data})=>{
                     <div className="flex gap-3 items-center">
                             <IconButton onClick={onMinus} icon={<Minus size={12} />} />
                                 <p className="text-gray-500">{data.num}</p>
-                                
                             <IconButton onClick={onPlus} icon={<Plus size={12} />} />
                     </div>
                 </div>
